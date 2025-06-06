@@ -3,14 +3,11 @@ require '../config/db.php';
 
 $data = json_decode(file_get_contents('php://input'), true);
 $username = $data['username'];
+$email = $data['email'];
 $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-$stmt = $conn->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
-$stmt->bind_param("ss", $username, $password);
+$stmt = $conn->prepare("INSERT INTO users (username, email, password_hash) VALUES (?, ?, ?)");
+$stmt->bind_param("sss", $username, $email, $password);
+$stmt->execute();
 
-if ($stmt->execute()) {
-    echo json_encode(['message' => 'User registered successfully']);
-} else {
-    echo json_encode(['error' => 'Username already exists']);
-}
-?>
+echo json_encode(['message' => 'User created']);
