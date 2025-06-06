@@ -2,16 +2,18 @@
 session_start();
 require '../config/db.php';
 
-$data = json_decode(file_get_contents("php://input"));
+$user_id = $_SESSION['user_id'];
+$data = json_decode(file_get_contents("php://input"), true);
+$deckname = $data['deckname'];
 
-$sql = "INSERT INTO flashcard_decks (user_id, deck_name, created_at, updated_at)
-        VALUES (?, ?, NOW(), NOW())";
+$sql = "INSERT INTO flashcard_decks (user_id, deck_name)
+        VALUES (?, ?)";
 
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("is", $data->user_id, $data->deck_name);
+$stmt->bind_param("is", $user_id, $deckname);
 
 if ($stmt->execute()) {
-    echo json_encode(["message" => "Deck created"]);
+    echo json_encode(["message" => "Deck created", "deck_id" => $stmt->insert_id]);
 } else {
     echo json_encode(["error" => $stmt->error]);
 }
