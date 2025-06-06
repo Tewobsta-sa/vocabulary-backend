@@ -1,6 +1,6 @@
 <?php
 $host = 'localhost';
-$db = 'flashcards_db';
+$db = 'vocabulary_pratice';
 $user = 'root';
 $pass = '';
 $conn = new mysqli($host, $user, $pass, $db);
